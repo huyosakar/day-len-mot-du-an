@@ -1,0 +1,128 @@
+
+class Sach:
+    def __init__(self, tensach="", tacgia="", giaban=0):
+        self.tensach = tensach
+        self.tacgia = tacgia
+        self.giaban = giaban
+
+    def nhap(self):
+        self.tensach = input("Nhập tên sách: ")
+        self.tacgia = input("Nhập tên tác giả: ")
+        self.giaban = float(input("Nhập giá bán: "))
+
+    def xuat(self):
+        print(f"Tên sách: {self.tensach}")
+        print(f"Tác giả: {self.tacgia}")
+        print(f"Giá bán: {self.giaban}")
+
+class Bia(Sach):
+    def __init__(self, tensach="", tacgia="", giaban=0, mahinh="", tienve=0):
+        super().__init__(tensach, tacgia, giaban)
+        self.mahinh = mahinh
+        self.tienve = tienve
+
+    def nhap(self):
+        super().nhap()
+        self.mahinh = input("Nhập mã hình ảnh: ")
+        self.tienve = float(input("Nhập tiền vẽ bìa: "))
+
+    def xuat(self):
+        super().xuat()
+        print(f"Mã hình ảnh: {self.mahinh}")
+        print(f"Tiền vẽ bìa: {self.tienve}")
+
+class HoaSy:
+    def __init__(self, hoten="", diachi=""):
+        self.hoten = hoten
+        self.diachi = diachi
+
+    def nhap(self):
+        self.hoten = input("Nhập họ tên họa sĩ: ")
+        self.diachi = input("Nhập địa chỉ họa sĩ: ")
+
+    def xuat(self):
+        print(f"Họ tên họa sĩ: {self.hoten}")
+        print(f"Địa chỉ họa sĩ: {self.diachi}")
+
+class SachVeBia(Bia, HoaSy):
+    def __init__(self, tensach="", tacgia="", giaban=0, mahinh="", tienve=0, hoten="", diachi=""):
+        Bia.__init__(self, tensach, tacgia, giaban, mahinh, tienve)
+        HoaSy.__init__(self, hoten, diachi)
+
+    def nhap(self):
+        Bia.nhap(self)
+        HoaSy.nhap(self)
+
+    def tinhtongtien(self):
+        return self.giaban + self.tienve
+
+    def xuat(self):
+        Bia.xuat(self)
+        HoaSy.xuat(self)
+        print(f"Tổng tiền sách: {self.tinhtongtien()}")
+
+def main():
+    danhsachsachvebia = []
+    danhsachsachkhongvebia = []
+
+    while True:
+        print("\nMenu:")
+        print("1. Nhập sách có vẽ bìa")
+        print("2. Nhập sách không vẽ bìa")
+        print("3. Hiển thị danh sách sách có vẽ bìa")
+        print("4. Hiển thị danh sách sách không vẽ bìa")
+        print("5. Sắp xếp sách không vẽ bìa theo giá bán tăng dần")
+        print("6. Tìm sách vẽ bìa theo tác giả")
+        print("0. Thoát chương trình")
+
+        p = int(input("Nhập lựa chọn: "))
+
+        if p == 1:
+            sachvebia = SachVeBia()
+            sachvebia.nhap()
+            danhsachsachvebia.append(sachvebia)
+        elif p == 2:
+            sachkhongvebia = Sach()
+            sachkhongvebia.nhap()
+            danhsachsachkhongvebia.append(sachkhongvebia)
+        elif p == 3:
+            if not danhsachsachvebia:
+                print("Danh sách sách có vẽ bìa trống.")
+            else:
+                print("Danh sách sách có vẽ bìa:")
+                for sach in danhsachsachvebia:
+                    sach.xuat()
+                    print("-------------------")
+        elif p== 4:
+            if not danhsachsachkhongvebia:
+                print("Danh sách sách không vẽ bìa trống.")
+            else:
+                print("Danh sách sách không vẽ bìa:")
+                for sach in danhsachsachkhongvebia:
+                    sach.xuat()
+                    print("-------------------")
+        elif p == 5:
+            danhsachsachkhongvebia.sort(key=lambda x: x.giaban)
+            print("Danh sách sách không vẽ bìa đã được sắp xếp theo giá bán:")
+            for sach in danhsachsachkhongvebia:
+                sach.xuat()
+                print("-------------------")
+        elif p == 6:
+            tacgiatim = input("Nhập tên tác giả để tìm sách có vẽ bìa: ")
+            ketqua = [sach for sach in danhsachsachvebia if sach.tacgia == tacgiatim]
+            if ketqua:
+                print(f"Những cuốn sách có vẽ bìa của tác giả {tacgiatim}:")
+                for sach in ketqua:
+                    sach.xuat()
+                    print("-------------------")
+            else:
+                print(f"Không có sách nào của tác giả {tacgiatim}.")
+        elif p == 0:
+            print("Thoát chương trình.")
+            break
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng nhập lại.")
+
+
+if __name__ == "__main__":
+    main()
